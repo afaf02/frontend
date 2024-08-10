@@ -30,7 +30,7 @@ export default function CreateStudentForm() {
   const [isSuccessFul, setIsSuccessFul] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
