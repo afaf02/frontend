@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import { ROUTES } from "./config/constants";
 import Body from "./Body";
 // import Profile from "./pages/Profile/Profile";
