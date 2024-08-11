@@ -1,5 +1,7 @@
 import {
+  Alert,
   Button,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   Radio,
@@ -16,6 +18,7 @@ import {
   studentsLoginThunk,
 } from "../../features/auth/authSlice";
 import { ROUTES } from "../../config/constants";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 interface SignInFromData {
   email: string;
@@ -31,6 +34,9 @@ const initialData: SignInFromData = {
 
 export default function SignIn() {
   const [formData, setFormData] = useState(initialData);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessFul, setIsSuccessFul] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -47,12 +53,16 @@ export default function SignIn() {
     e.preventDefault();
     if (!formData.password || !formData.email)
       return console.log("All feilds are required");
+    setIsLoading(true);
     const payload = { email: formData.email, password: formData.password };
-    await dispatch(
+    const { res }: any = await dispatch(
       formData.userType === "Admin"
         ? adminLoginThunk(payload)
         : studentsLoginThunk(payload)
     );
+    setIsLoading(false);
+    if (res.status !== 201) return setError("Error while creating student");
+    setIsSuccessFul(true);
     navigate(`/${ROUTES.dashboard}`);
   };
 
@@ -97,6 +107,11 @@ export default function SignIn() {
             Sign in with your credentials below.
           </Typography>
         </Box>
+        {error && (
+          <Alert variant="outlined" severity="error" sx={{ width: "100%" }}>
+            {error}
+          </Alert>
+        )}
         <TextField
           label="Email"
           name="email"
@@ -154,8 +169,15 @@ export default function SignIn() {
           sx={{
             borderRadius: 4,
           }}
+          disabled={isLoading || isSuccessFul}
         >
-          Sign In
+          {isSuccessFul ? (
+            <CheckCircleIcon />
+          ) : isLoading ? (
+            <CircularProgress size={24.5} color="inherit" />
+          ) : (
+            "Sign In"
+          )}
         </Button>
       </Box>
     </Box>
