@@ -12,10 +12,11 @@ import AutoModeIcon from "@mui/icons-material/AutoMode";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import GridViewIcon from "@mui/icons-material/GridView";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useAppDispatch } from "../../config/store";
+import { useAppDispatch, useAppSelector } from "../../config/store";
 import { logout } from "../../features/auth/authSlice";
 
 export default function Navbar({ width }: { width?: number }) {
+  const { userType } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   return (
     <Box
@@ -47,16 +48,18 @@ export default function Navbar({ width }: { width?: number }) {
               </ListItemButton>
             </NavLink>
           </ListItem>
-          <ListItem>
-            <NavLink to={ROUTES.feedbacks} className={"nav-link"}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <GridViewIcon />
-                </ListItemIcon>
-                <ListItemText>Feedbacks</ListItemText>
-              </ListItemButton>
-            </NavLink>
-          </ListItem>
+          {userType === "Admin" && (
+            <ListItem>
+              <NavLink to={ROUTES.feedbacks} className={"nav-link"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <GridViewIcon />
+                  </ListItemIcon>
+                  <ListItemText>Feedbacks</ListItemText>
+                </ListItemButton>
+              </NavLink>
+            </ListItem>
+          )}
           <ListItem>
             <NavLink to={`${ROUTES.feedbackForm}`} className={`nav-link`}>
               <ListItemButton>
@@ -67,26 +70,18 @@ export default function Navbar({ width }: { width?: number }) {
               </ListItemButton>
             </NavLink>
           </ListItem>
-          <ListItem>
-            <NavLink to={ROUTES.users} className={"nav-link"}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <PersonOutlineIcon />
-                </ListItemIcon>
-                <ListItemText>Students</ListItemText>
-              </ListItemButton>
-            </NavLink>
-          </ListItem>
-          {/* <ListItem>
-            <NavLink to={`${ROUTES.createStudentForm}`} className={`nav-link`}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <AutoModeIcon />
-                </ListItemIcon>
-                <ListItemText>Create Student</ListItemText>
-              </ListItemButton>
-            </NavLink>
-          </ListItem> */}
+          {userType === "Admin" && (
+            <ListItem>
+              <NavLink to={ROUTES.users} className={"nav-link"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <PersonOutlineIcon />
+                  </ListItemIcon>
+                  <ListItemText>Students</ListItemText>
+                </ListItemButton>
+              </NavLink>
+            </ListItem>
+          )}
           <ListItem>
             <NavLink
               to={ROUTES.signIn}
