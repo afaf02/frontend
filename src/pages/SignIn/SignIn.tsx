@@ -82,7 +82,9 @@ export default function SignIn() {
         gap={2}
         p={4}
       >
-        <img src="/logo.png" alt="" width={80} />
+        <Typography variant="h3" color={"#6BB955"} textAlign={"center"}>
+          SMIT
+        </Typography>
         <Box width={"100%"}>
           <Typography mx={"auto"} textAlign={"center"}>
             Welcome back

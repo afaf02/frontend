@@ -5,6 +5,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "../../config/constants";
@@ -34,7 +35,9 @@ export default function Navbar({ width }: { width?: number }) {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <img src="/logo.png" alt="" width={100} />
+        <Typography variant="h3" color={"#6BB955"} textAlign={"center"}>
+          SMIT
+        </Typography>
       </Box>
       <Box>
         <List component={"nav"}>
