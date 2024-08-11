@@ -68,7 +68,7 @@ export default function Navbar({ width }: { width?: number }) {
             </NavLink>
           </ListItem>
           <ListItem>
-            <NavLink to={ROUTES.profile} className={"nav-link"}>
+            <NavLink to={ROUTES.users} className={"nav-link"}>
               <ListItemButton>
                 <ListItemIcon>
                   <PersonOutlineIcon />

@@ -4,7 +4,7 @@ import { api } from "../config/axios";
 import { User } from "../types/user";
 
 export const getUsers = async (): Promise<User[]> => {
-  const response = await api.get(`/students`);
+  const response = await api.get(`/users`);
   return response.data;
 };
 

@@ -92,7 +92,6 @@ export const USERS_COLUMNS = [
     label: "Email",
     minWidth: 100,
   },
-  { id: "status", label: "Status", minWidth: 100 },
 ];
 
 export const BROKERS_COLUMNS = [
