@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { adminLogin, studentLogin, studentRegister } from "../../services/auth";
 import { Admin, User } from "../../types/user";
+import { api } from "../../config/axios";
 
 export interface AuthState {
-  userType: string;
+  userType: "Admin" | "Student";
   admin: Admin;
   user: User;
   isLoading: boolean;
@@ -17,7 +17,7 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-  userType: "",
+  userType: "Student",
   admin: {} as Admin,
   user: {} as User,
   isLoading: true,
@@ -30,9 +30,12 @@ const initialState: AuthState = {
 };
 
 export const adminLoginThunk = createAsyncThunk(
-  "auth/login",
+  "auth/login-admin",
   async ({ email, password }: { email: string; password: string }) => {
-    const result = await adminLogin(email, password);
+    const result = await api.post<any>(`/admin/login`, {
+      email,
+      password,
+    });
     return result;
   }
 );
@@ -40,15 +43,19 @@ export const adminLoginThunk = createAsyncThunk(
 export const studentsLoginThunk = createAsyncThunk(
   "auth/login-student",
   async ({ email, password }: { email: string; password: string }) => {
-    const result = await studentLogin(email, password);
+    const result = await api.post(`/auth/login`, {
+      email,
+      password,
+    });
     return result;
   }
 );
 
 export const studentsRegisterThunk = createAsyncThunk(
-  "auth/login-admin",
+  "auth/register-admin",
   async (user: User) => {
-    const result = await studentRegister(user);
+    const result = await api.post<any>(`/auth/register`, user);
+    console.log(result);
     return result;
   }
 );
@@ -92,6 +99,11 @@ export const authSlice = createSlice({
     setUser: (state, action: PayloadAction<Admin>) => {
       state.admin = action.payload;
     },
+    logout: (state) => {
+      state = initialState;
+      state.admin = initialState.admin;
+      state.user = initialState.user;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -104,11 +116,12 @@ export const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(adminLoginThunk.fulfilled, (state, { payload }) => {
-        state.admin = payload.admin;
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
-        state.accessTokenExpiry = payload.accessTokenExpiry;
-        state.refreshTokenExpiry = payload.refreshTokenExpiry;
+        state.admin = payload.data.admin;
+        state.accessToken = payload.data.accessToken;
+        state.refreshToken = payload.data.refreshToken;
+        state.accessTokenExpiry = payload.data.accessTokenExpiry;
+        state.refreshTokenExpiry = payload.data.refreshTokenExpiry;
+        state.userType = "Admin";
         state.isLoading = false;
       })
       // student login
@@ -120,11 +133,12 @@ export const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(studentsLoginThunk.fulfilled, (state, { payload }) => {
-        state.user = payload.user;
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
-        state.accessTokenExpiry = payload.accessTokenExpiry;
-        state.refreshTokenExpiry = payload.refreshTokenExpiry;
+        state.user = payload.data.user;
+        state.accessToken = payload.data.accessToken;
+        state.refreshToken = payload.data.refreshToken;
+        state.accessTokenExpiry = payload.data.accessTokenExpiry;
+        state.refreshTokenExpiry = payload.data.refreshTokenExpiry;
+        state.userType = "Student";
         state.isLoading = false;
       });
     // // register
@@ -161,6 +175,6 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser } = authSlice.actions;
+export const { setUser, logout } = authSlice.actions;
 
 export default authSlice.reducer;

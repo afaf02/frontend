@@ -1,19 +1,32 @@
-import { Button, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useAppDispatch } from "../../config/store";
-import { useNavigate } from "react-router-dom";
-import { adminLoginThunk } from "../../features/auth/authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  adminLoginThunk,
+  studentsLoginThunk,
+} from "../../features/auth/authSlice";
 import { ROUTES } from "../../config/constants";
 
 interface SignInFromData {
   email: string;
   password: string;
+  userType: "Admin" | "Student";
 }
 
 const initialData: SignInFromData = {
   email: "",
   password: "",
+  userType: "Student",
 };
 
 export default function SignIn() {
@@ -34,8 +47,12 @@ export default function SignIn() {
     e.preventDefault();
     if (!formData.password || !formData.email)
       return console.log("All feilds are required");
-    const payload = formData;
-    await dispatch(adminLoginThunk(payload));
+    const payload = { email: formData.email, password: formData.password };
+    await dispatch(
+      formData.userType === "Admin"
+        ? adminLoginThunk(payload)
+        : studentsLoginThunk(payload)
+    );
     navigate(`/${ROUTES.dashboard}`);
   };
 
@@ -52,7 +69,7 @@ export default function SignIn() {
     >
       <Box
         width={"100%"}
-        maxWidth={"20rem"}
+        maxWidth={"25rem"}
         borderRadius={"0.5rem"}
         bgcolor={"#fff"}
         boxShadow={
@@ -91,11 +108,43 @@ export default function SignIn() {
           label="Password"
           name="password"
           variant="filled"
+          type="password"
           size="small"
           fullWidth
           value={formData.password}
           onChange={handleChange}
         />
+        <FormControl size="small">
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="userType"
+            value={formData.userType}
+            onChange={handleChange}
+          >
+            <FormControlLabel
+              value="Student"
+              control={<Radio size="small" />}
+              label="Student"
+            />
+            <FormControlLabel
+              value="Admin"
+              control={<Radio size="small" />}
+              label="Admin"
+            />
+          </RadioGroup>
+        </FormControl>
+        <Typography textAlign={"center"} color={"rgba(0, 0, 0, 0.54)"}>
+          Don't have an account?{" "}
+          <Link
+            to={`/${ROUTES.signUp}`}
+            style={{
+              color: "#6BB955",
+            }}
+          >
+            Sign Up
+          </Link>
+        </Typography>
         <Button
           variant="contained"
           type="submit"

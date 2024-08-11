@@ -9,7 +9,6 @@ import {
 import { ChangeEvent, FormEvent, useState } from "react";
 import { User } from "../../types/user";
 import { useAppDispatch } from "../../config/store";
-import { useNavigate } from "react-router-dom";
 import { studentsRegisterThunk } from "../../features/auth/authSlice";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
@@ -30,7 +29,6 @@ export default function CreateStudentForm() {
   const [isSuccessFul, setIsSuccessFul] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

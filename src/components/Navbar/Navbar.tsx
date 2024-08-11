@@ -12,8 +12,11 @@ import AutoModeIcon from "@mui/icons-material/AutoMode";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import GridViewIcon from "@mui/icons-material/GridView";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useAppDispatch } from "../../config/store";
+import { logout } from "../../features/auth/authSlice";
 
 export default function Navbar({ width }: { width?: number }) {
+  const dispatch = useAppDispatch();
   return (
     <Box
       display={"flex"}
@@ -74,7 +77,7 @@ export default function Navbar({ width }: { width?: number }) {
               </ListItemButton>
             </NavLink>
           </ListItem>
-          <ListItem>
+          {/* <ListItem>
             <NavLink to={`${ROUTES.createStudentForm}`} className={`nav-link`}>
               <ListItemButton>
                 <ListItemIcon>
@@ -83,9 +86,13 @@ export default function Navbar({ width }: { width?: number }) {
                 <ListItemText>Create Student</ListItemText>
               </ListItemButton>
             </NavLink>
-          </ListItem>
+          </ListItem> */}
           <ListItem>
-            <NavLink to={ROUTES.signIn} className={"nav-link"}>
+            <NavLink
+              to={ROUTES.signIn}
+              className={"nav-link"}
+              onClick={() => dispatch(logout())}
+            >
               <ListItemButton>
                 <ListItemIcon>
                   <LogoutIcon />
